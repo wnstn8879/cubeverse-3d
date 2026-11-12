@@ -6,13 +6,15 @@
 
 | 항목 | 확인된 상태 |
 | --- | --- |
-| 웹 플레이 고정 주소 | 아직 미배포 · 원격 저장소 연결 대기 |
-| 최신 APK 다운로드 | 로컬 디버그 APK 빌드·서명 검증 통과 · Releases 게시 전 |
+| 웹 플레이 고정 주소 | [비공개 웹 플레이](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site) · Sites 게시 성공 |
+| 최신 APK 다운로드 | [테스트 APK 다운로드](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/downloads.html) · 디버그 서명 검증 통과 |
 | GitHub Actions | 워크플로 구성됨 · 원격 실행 전 |
 | 자동 테스트 | 엔진 1,019개·카메라 조작 96개·앱 통합 93개 검증과 회귀·프로세스 복원 통과 |
 | Android 실기기 | 설치·터치·햅틱·성능 미검증 |
 
 GitHub 계정 조회와 CLI 인증은 확인했습니다. 저장소 생성 요청이 연결된 GitHub 통합의 권한 부족(`Resource not accessible by integration`)으로 거절되어 `cubeverse-3d` 저장소 생성과 원격 게시가 대기 중입니다. [배포 안내](DEPLOYMENT.md)에 연결 후 빌드·배포 절차와 현재 결과를 기록합니다.
+
+웹과 다운로드 페이지는 본인 ChatGPT 계정만 접근하는 비공개 미리보기입니다. [빌드 현황](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/status.html)은 배포 코드 기준 커밋과 실제 통과한 검사 항목을 표시합니다. 게시 성공을 확인했으며 실제 브라우저 조작은 아직 검증하지 않았습니다.
 
 ## 실제 구현 범위
 
@@ -30,7 +32,7 @@ GitHub 계정 조회와 CLI 인증은 확인했습니다. 저장소 생성 요�
 
 특수 퍼즐, 상태별 전체 풀이와 화살표 가이드, 기록 리플레이 화면·통계, 영어 UI, 계정·클라우드 동기화, 친구·온라인 매칭·서버 검증·랭킹, 프리미엄 상품·스킨·Google Play 결제·구매 복원, 정식 서명·Play 등록은 구현되지 않았습니다. 상점에는 무료 미리 듣기와 개발 예정 안내를 제공합니다.
 
-로컬 APK는 [`build/android/CubeVerse-3D-debug.apk`](build/android/CubeVerse-3D-debug.apk)입니다. Android 7.0(API 24) 이상, arm64-v8a 또는 x86_64 대상이며 디버그 서명 빌드입니다. GitHub 공개 다운로드 주소는 아직 없습니다.
+로컬 APK는 [`build/android/CubeVerse-3D-debug.apk`](build/android/CubeVerse-3D-debug.apk)입니다. Android 7.0(API 24) 이상, arm64-v8a 또는 x86_64 대상이며 디버그 서명 빌드입니다. [웹 다운로드 페이지](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/downloads.html)에서도 받을 수 있습니다. GitHub Releases는 아직 게시되지 않았습니다.
 
 ## 개발 실행
 

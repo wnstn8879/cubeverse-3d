@@ -68,3 +68,15 @@ adb install -r build/android/CubeVerse-3D-debug.apk
 ## 정식 출시 전에 남은 일
 
 실기기 QA, 개인정보 처리방침, Play Console 등록, 정식 AAB/서명키 관리와 Play Billing 검증은 아직 완료되지 않았다. 결제나 계정 동기화가 연결된 것처럼 표시하지 않는다. 정식 키는 승인 후 보안 저장소와 CI Secrets에 보관하고 저장소에 커밋하지 않는다. 현재는 유료 서비스나 실결제를 사용하지 않는다.
+
+## 현재 비공개 미리보기 (Sites 대체 호스팅)
+
+- 웹: https://cubeverse-3d-play.angksehdfur2468.chatgpt.site
+- 테스트 APK: https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/downloads.html
+- 실제 빌드 현황: https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/status.html
+
+Sites의 게시 결과 `succeeded`를 확인했습니다. 본인 계정만 접근하며 공개 범위는 변경하지 않았습니다. 브라우저 조작·실기기 설치는 미검증입니다. GitHub 생성 권한 제한 때문에 이 미리보기를 먼저 게시했으며, GitHub Actions 자동 배포가 실행됐다는 의미는 아닙니다.
+
+원본 Web WASM(약36MiB)과 APK(약55MiB)를 18MiB 조각으로 전송하고 브라우저에서 원본 바이트로 재구성합니다. `tools/prepare_site.py`와 `tools/test_site.mjs`는 재구성 SHA-256·WASM 컴파일·fetch 통과를 검증합니다. APK 다운로드 페이지는 저장 전 SHA-256을 검사합니다.
+
+배포 전용 소스는 `/workspace/sites/cubeverse-play`입니다. 기본 제공 Sites 소스 헬퍼가 이 환경에 없어 `tools/publish_site_source.py`를 사용했습니다. 대상 URL·프로젝트 ID를 고정 검증하며 자격증명은 숨겨진 stdin으로만 받아 프로세스 메모리에서 사용합니다. 원격은 1회 푸시64MiB 제한이 있어 Web/APK를 별도 커밋으로 나눕니다. 다음 세션에는 Sites 스킬을 읽고 기존 project_id를 재사용하세요.

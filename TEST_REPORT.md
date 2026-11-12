@@ -49,7 +49,7 @@ MOBILE_UI_POINTER_TESTS_PASSED
 | Godot Web 내보내기 | 로컬 성공 · `build/reports/web-export.log`, `web.passed` |
 | Android 디버그 APK | 로컬 빌드·ZIP 무결성·v2/v3 서명 통과 · `build/reports/android-export.log`, `apk-verification.log` |
 | GitHub Actions 원격 실행 | 미실행 · 저장소 생성/접근 연결 대기 |
-| Pages 공개 주소 접속 | 미실행 · 공개 배포 대기 |
+| 웹 호스팅 | Sites 비공개 게시 성공 · `https://cubeverse-3d-play.angksehdfur2468.chatgpt.site`; GitHub Pages는 대기 |
 | Linux 네이티브 화면 | 홈·10×10·설정 렌더링 확인 · `docs/home.png`, `docs/cube-10.png`, `docs/settings.png` |
 | 실제 브라우저 플레이 | 미검증 · 이 세션에 브라우저 조작 도구가 제공되지 않음 |
 | 아카데미·타이머·기록 전체 흐름 | 헤드리스 실제 앱 장면 통합 93개 검사 통과 · `build/reports/app-tests.log` |
@@ -73,3 +73,5 @@ APK: `com.cubeverse.game`, 버전 `0.1.0-alpha`(코드 1), 최소 API 24·대상
 정적 호스팅 어댑터 검증: WebAssembly·APK 분할 파일 재조합 SHA-256 일치, `WebAssembly.compileStreaming`, 엔진 캐시 및 일반 fetch 경로 검사를 Node에서 통과했습니다. 실제 브라우저 다운로드 UI 실행은 미검증입니다.
 
 실제 `Input.parse_input_event` 터치 GUI 검증 31개 통과: 화면 이동·2×2 선택·사운드 저장·GUI 터치가 큐브를 돌리지 않음·원시 터치와 에뮬레이션 마우스가 중복 회전하지 않음. 물리 기기 이벤트 전달 자체의 검증은 아닙니다.
+
+Sites 게시 결과: `succeeded`, deployment_id `appgdep_6af5dac514bc8191ac9027fe9afce51c`. 서버 게시 성공과 실제 브라우저 플레이 검증은 구분합니다. 최종 산출물/리소스 지문은 `docs/BUILD_MANIFEST.json`을 참고하세요.
