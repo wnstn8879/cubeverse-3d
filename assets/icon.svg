@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#16213d"/><stop offset="1" stop-color="#080d1b"/></linearGradient>
+    <linearGradient id="top" x2="1" y2="1"><stop stop-color="#a8ffe2"/><stop offset="1" stop-color="#4bd9bb"/></linearGradient>
+    <linearGradient id="left" x2="1" y2="1"><stop stop-color="#628bff"/><stop offset="1" stop-color="#2c4ec9"/></linearGradient>
+    <linearGradient id="right" x2="1" y2="1"><stop stop-color="#b88bff"/><stop offset="1" stop-color="#7751dc"/></linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="55" fill="url(#bg)"/>
+  <ellipse cx="128" cy="218" rx="72" ry="12" fill="#000" opacity=".28"/>
+  <g stroke="#10192c" stroke-width="5" stroke-linejoin="round">
+    <path d="M128 39 216 90 128 141 40 90Z" fill="url(#top)"/>
+    <path d="M40 90 128 141 128 224 40 173Z" fill="url(#left)"/>
+    <path d="M128 141 216 90 216 173 128 224Z" fill="url(#right)"/>
+    <path d="M69.3 73 157.3 124M98.7 56 186.7 107M69.3 107 157.3 56M98.7 124 186.7 73" fill="none"/>
+    <path d="M69.3 107 69.3 190M98.7 124 98.7 207M40 117.7 128 168.7M40 145.3 128 196.3" fill="none"/>
+    <path d="M157.3 124 157.3 207M186.7 107 186.7 190M128 168.7 216 117.7M128 196.3 216 145.3" fill="none"/>
+  </g>
+  <path d="M128 39 216 90M40 90 128 39" fill="none" stroke="#d0ffef" stroke-width="2" opacity=".6"/>
+</svg>

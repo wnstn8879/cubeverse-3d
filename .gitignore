@@ -1,0 +1,16 @@
+.godot/
+.tools/
+build/
+.DS_Store
+*.tmp
+*.keystore
+*.jks
+*.p12
+*.pem
+.env
+.env.*
+!.env.example
+export_credentials.cfg
+
+__pycache__/
+*.pyc

@@ -1,0 +1,36 @@
+; CubeVerse 3D — Godot 4.6.3, Compatibility renderer.
+config_version=5
+
+[application]
+config/name="CubeVerse 3D"
+config/icon="res://assets/icon.svg"
+config/version="0.1.0"
+run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.6", "GL Compatibility")
+config/description="손끝에서 즐기는 큐브. CubeVerse 3D playable development build."
+
+[display]
+window/size/viewport_width=540
+window/size/viewport_height=960
+window/size/window_width_override=540
+window/size/window_height_override=960
+window/stretch/mode="canvas_items"
+window/handheld/orientation=1
+
+[rendering]
+textures/vram_compression/import_etc2_astc=true
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.035, 0.045, 0.07, 1)
+textures/default_filters/use_nearest_mipmap_filter=false
+renderer/textures/default_filters/use_nearest_mipmap_filter=false
+
+[input_devices]
+pointing/emulate_touch_from_mouse=false
+pointing/emulate_mouse_from_touch=true
+
+[audio]
+driver/enable_input=false
+
+[gui]
+theme/default_font_multichannel_signed_distance_field=true
