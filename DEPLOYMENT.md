@@ -4,7 +4,7 @@ Godot **4.6.3 stable**, GDScript, Compatibility 렌더러를 사용한다. Web �
 
 ## 현재 배포 상태
 
-- 2026-11-12 로컬 `tools/build.sh all` 통과: 자동 엔진 검사 1,019개, 별도 프로세스 저장/복원, 앱 통합 검사 93개, Web/APK 내보내기 및 APK 서명/내용 검증 성공.
+- 2026-11-12 로컬 `tools/build.sh all` 통과: 자동 엔진 검사 1,019개, 별도 프로세스 저장/복원, 앱 통합 검사 93개, 화면 터치 입력 검사 31개, Web/APK 내보내기 및 APK 서명/내용 검증 성공.
 - 로컬 빌드 경로: `build/web/index.html`, `build/android/CubeVerse-3D-debug.apk`.
 - GitHub 저장소 생성/푸시 권한을 확보하기 전까지 Actions 실행·Pages 공개 배포·Release 게시는 대기 상태다.
 - 아직 확인하지 않은 고정 웹 주소나 APK 다운로드 주소를 성공한 배포 링크로 표시하지 않는다.
@@ -45,7 +45,7 @@ python3 -m http.server 8000 --directory build/web
 `.github/workflows/build.yml`의 작업 순서:
 
 1. `main`, `develop`, `feature/**`, PR, `v*` 태그 또는 수동 실행에서 Godot/SDK 설치.
-2. headless import, 전체 엔진 테스트, 별도 프로세스 저장/복원 및 실제 게임 씬 통합 테스트.
+2. headless import, 전체 엔진 테스트, 별도 프로세스 저장/복원 및 실제 게임 씬 통합 테스트와 화면 터치 GUI/큐브 입력 전달 검사.
 3. Web 릴리스 내보내기 및 Android 디버그 내보내기 후 APK 서명/ZIP/패키지/아키텍처 검증.
 4. 검사 로그, Web ZIP, APK를 30일 보관하는 Actions 아티팩트로 업로드.
 5. `main` 성공 빌드를 GitHub Pages에 배포. PR에는 배포 권한을 제공하지 않음.

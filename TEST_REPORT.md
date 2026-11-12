@@ -18,6 +18,8 @@ PROCESS_RESTART_READ_OK
 ALL_HEADLESS_TESTS_PASSED
 APP_TEST_RESULT checks=93 failures=0
 APP_INTEGRATION_TESTS_PASSED
+MOBILE_UI_TEST_RESULT checks=31 failures=0
+MOBILE_UI_POINTER_TESTS_PASSED
 ```
 
 | 검증 항목 | 결과 | 방법 |
@@ -54,9 +56,9 @@ APP_INTEGRATION_TESTS_PASSED
 
 앱 통합 검사는 화면 이동, 2×2·10×10·3×3별 상태 유지, 타이머 시작/종료와 기록, 두 학습 과정, 사운드·진도·기록 복원을 검증합니다. 별도 회귀 검사는 학습 중 자유 상태 보존, 잘못된 동작 취소, 회전 도중 학습 종료 방지, 화면 갱신 중 셔플 입력 잠금, 잘못된 저장 항목 처리를 검증합니다.
 
-APK: `com.cubeverse.game`, 버전 `0.1.0-alpha`(코드 1), 최소 API 24·대상 API 36, `arm64-v8a`·`x86_64`, `VIBRATE` 권한만 선언했습니다. 산출물 크기 57,852,811바이트, SHA-256 `dbcae4231cab29c1b2365b6737eba0e99b90c1ecfa36279c9318fe894408cde9`입니다. 이 서명 검사는 실제 설치·실행을 증명하지 않습니다.
+APK: `com.cubeverse.game`, 버전 `0.1.0-alpha`(코드 1), 최소 API 24·대상 API 36, `arm64-v8a`·`x86_64`, `VIBRATE` 권한만 선언했습니다. 산출물 크기 57,881,764바이트, SHA-256 `61c4a0f66b549cf7cf9dbe3cd48bf7e46bf1fbde2dc18b7f5766e697bafad9a5`입니다. 이 서명 검사는 실제 설치·실행을 증명하지 않습니다.
 
-웹 산출물은 `index.wasm` 37,700,666바이트, `index.pck` 1,804,240바이트입니다. 내보내기 성공과 브라우저 실행 성공을 구분합니다.
+웹 산출물은 `index.wasm` 37,700,666바이트, `index.pck` 1,842,692바이트입니다. 내보내기 성공과 브라우저 실행 성공을 구분합니다.
 
 ## 미검증·제한
 
@@ -67,3 +69,7 @@ APK: `com.cubeverse.game`, 버전 `0.1.0-alpha`(코드 1), 최소 API 24·대상
 - 온라인 검증·결제·특수 퍼즐은 미구현이므로 테스트 대상이 아닙니다.
 
 10×10 메시 생성 시간은 클라우드 CPU 측정값일 뿐 모바일 FPS 증거가 아닙니다. 합성 입력 테스트는 실제 손가락 조작의 대체 검증으로 간주하지 않습니다.
+
+정적 호스팅 어댑터 검증: WebAssembly·APK 분할 파일 재조합 SHA-256 일치, `WebAssembly.compileStreaming`, 엔진 캐시 및 일반 fetch 경로 검사를 Node에서 통과했습니다. 실제 브라우저 다운로드 UI 실행은 미검증입니다.
+
+실제 `Input.parse_input_event` 터치 GUI 검증 31개 통과: 화면 이동·2×2 선택·사운드 저장·GUI 터치가 큐브를 돌리지 않음·원시 터치와 에뮬레이션 마우스가 중복 회전하지 않음. 물리 기기 이벤트 전달 자체의 검증은 아닙니다.

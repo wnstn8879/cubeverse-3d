@@ -148,7 +148,8 @@ func _button(parent: Node, text: String, action: Callable, accent := false) -> B
 	b.add_theme_color_override("font_color", BG if accent else INK)
 	b.add_theme_color_override("font_hover_color", BG if accent else INK)
 	b.add_theme_color_override("font_pressed_color", BG if accent else INK)
-	b.pressed.connect(action)
+	# Touch also emits a GUI mouse event. Rebuild after that dispatch finishes.
+	b.pressed.connect(action, CONNECT_DEFERRED)
 	parent.add_child(b)
 	return b
 

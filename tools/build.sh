@@ -17,6 +17,7 @@ fi
 rm -f build/reports/tests.passed build/reports/web.passed build/reports/android.passed
 python3 tests/run_tests.py 2>&1 | tee build/reports/tests.log
 python3 tools/test_app.py 2>&1 | tee build/reports/app-tests.log
+python3 tools/test_mobile_ui.py 2>&1 | tee build/reports/mobile-ui-tests.log
 if rg -q 'SCRIPT ERROR|Parse Error|Failed to load script' build/reports/tests.log; then
   exit 1
 fi
