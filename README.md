@@ -6,11 +6,11 @@
 
 | 항목 | 확인된 상태 |
 | --- | --- |
-| 소스 저장소 | [wnstn8879/cubeverse-3d](https://github.com/wnstn8879/cubeverse-3d) · 0.2.0 기능 브랜치 저장·CI 성공 |
+| 소스 저장소 | [wnstn8879/cubeverse-3d](https://github.com/wnstn8879/cubeverse-3d) · 0.2.0 main·develop 반영 및 릴리스 태그 저장 |
 | 웹 플레이 | [비공개 웹 미리보기](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site) · 0.2.0 비공개 게시 성공 |
-| APK 다운로드 | [테스트 APK 페이지](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/downloads.html) · 0.2.0 디버그 APK |
-| 자동 빌드 | [0.2.0 검증 실행](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43674662634) · 전체 검사·Web/APK·Artifacts 성공 |
-| GitHub Pages | main 반영 후 자동 게시 확인 대기 |
+| APK 다운로드 | [공개 테스트 APK](https://github.com/wnstn8879/cubeverse-3d/releases/download/v0.2.0-alpha/CubeVerse-3D-debug.apk) · [v0.2.0-alpha 릴리스](https://github.com/wnstn8879/cubeverse-3d/releases/tag/v0.2.0-alpha) |
+| 자동 빌드 | [태그 CI](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43675188530) · 전체 검사·Web/APK·공개 Release 성공 |
+| GitHub Pages | [main 빌드](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43675188364) 성공, Pages 설정 생성 API 403으로 미게시 · [설정](https://github.com/wnstn8879/cubeverse-3d/settings/pages) 확인 필요 |
 | 최신 0.2.0 | 로컬·GitHub CI 검증과 Sites 웹·APK 게시 성공 |
 | 실제 Android | 설치·기기 터치·햅틱·성능 미검증 |
 
@@ -34,7 +34,7 @@
 
 진짜 미러 큐브·메가밍크스·스큐브·기어·스퀘어-1·피셔·고스트의 개별 엔진, 임의 상태 풀이와 상태별 화살표, 리플레이 화면·통계, 영어 UI, 로그인·클라우드 동기화, 친구·온라인 대전·서버 검증·랭킹, 프리미엄 상품·Google Play 결제·구매 복원, 정식 서명과 Play 등록은 미구현입니다. 결제되지 않은 상품을 구매 완료로 표시하지 않습니다.
 
-검증된 0.2.0 APK는 [비공개 다운로드 페이지](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/downloads.html)와 [GitHub Actions Artifacts](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43674662634)에서 받을 수 있습니다. GitHub Release는 태그 빌드 게시 확인 대기입니다. 로컬 파일은 `build/android/CubeVerse-3D-debug.apk`입니다.
+검증된 0.2.0 테스트 APK는 [GitHub 공개 다운로드](https://github.com/wnstn8879/cubeverse-3d/releases/download/v0.2.0-alpha/CubeVerse-3D-debug.apk) 또는 [비공개 다운로드 페이지](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/downloads.html)에서 받을 수 있습니다. [태그 CI](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43675188530)가 공개 Release 게시까지 완료했습니다. 로컬·Sites APK와 GitHub CI APK는 독립된 디버그 키로 서명되어 해시가 다르므로 [TEST_REPORT.md](TEST_REPORT.md)의 산출물별 값을 확인하세요. 로컬 파일은 `build/android/CubeVerse-3D-debug.apk`입니다.
 
 ## 개발 실행
 

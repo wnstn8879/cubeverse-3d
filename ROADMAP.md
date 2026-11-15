@@ -12,8 +12,8 @@
 - [x] 0.2.0 최종 검사·Web/APK 빌드·서명 검증
 - [x] 0.2.0 기능 브랜치 GitHub 푸시·Sites 갱신
 - [x] GitHub Actions 기능 브랜치 실행·Web/APK Artifacts 성공
-- [ ] 태그 빌드와 GitHub Release 확인
-- [ ] GitHub Pages 활성화와 게시 주소 확인
+- [x] `v0.2.0-alpha` 태그 전체 빌드와 공개 APK Release 확인
+- [ ] GitHub Pages 생성 API 403 해소·Source 활성화와 게시 주소 확인
 
 ## Phase 1 — NxN 조작
 

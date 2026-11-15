@@ -92,3 +92,14 @@ adb install -r build/android/CubeVerse-3D-debug.apk
 배포 전용 소스는 `/workspace/sites/cubeverse-play`입니다. 기본 제공 Sites 소스 헬퍼가 이 환경에 없어 `tools/publish_site_source.py`를 사용했습니다. 대상 URL·프로젝트 ID를 고정 검증하며 자격증명은 숨겨진 stdin으로만 받아 프로세스 메모리에서 사용합니다. 원격은 1회 푸시64MiB 제한이 있어 Web/APK를 별도 커밋으로 나눕니다. 다음 세션에는 Sites 스킬을 읽고 기존 project_id를 재사용하세요.
 
 기능 브랜치 원격 검증: [Actions 43674662634](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43674662634)에서 0.2.0 전체 테스트·Web/APK·아티팩트 업로드가 성공했습니다. 최초 SDK 오류는 폐기된 `tools` 패키지 설치를 제거해 해결했습니다.
+
+## GitHub 0.2.0 릴리스 확정
+
+- 소스 main/develop 및 태그 `v0.2.0-alpha`: 기능 기준 코드 `9716165`, 릴리스 태그 커밋 `137ba9f`.
+- [태그 자동 빌드·릴리스 성공](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43675188530).
+- [공개 릴리스](https://github.com/wnstn8879/cubeverse-3d/releases/tag/v0.2.0-alpha).
+- [공개 APK](https://github.com/wnstn8879/cubeverse-3d/releases/download/v0.2.0-alpha/CubeVerse-3D-debug.apk): 59,200,397바이트, SHA-256 `26900d3437e158c832986631ef11c1d4beabaa471c5fb05a05f54547dd263ff7`.
+
+이 CI APK와 Sites의 로컬 빌드 APK는 독립된 디버그 빌드이므로 해시와 서명키가 다를 수 있습니다. 같은 배포 경로를 유지하는 편이 테스트 업데이트에 유리합니다. 정식 출시 서명은 아직 연결하지 않았습니다.
+
+[main 실행 43675188364](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43675188364)의 전체 테스트·Web/APK 빌드는 성공했습니다. Pages의 최초 생성만 `Resource not accessible by integration`으로 실패했습니다. 사용자가 [Pages 설정](https://github.com/wnstn8879/cubeverse-3d/settings/pages)에서 Source를 GitHub Actions로 활성화하면 이 실행의 실패한 Pages 작업만 다시 실행할 수 있습니다. 공개 Pages 주소는 아직 성공으로 표시하지 않습니다.

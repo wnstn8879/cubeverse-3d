@@ -37,9 +37,10 @@ Linux OpenGL 소프트웨어 렌더링에서 홈·학습·피라밍크스·쿠�
 | --- | --- |
 | 최신 0.2.0 Web/APK | 전체 검사·Web/APK 내보내기 통과 |
 | 0.2.0 APK 서명·해시 | ZIP 무결성·v2/v3 서명·패키지·아키텍처·폰트 라이선스 확인 통과 |
-| GitHub 저장소 | 0.2.0 기능 커밋 `9716165c7910906d96362df352a6ffeeb5108385` 푸시 완료 |
-| GitHub Actions | [기능 브랜치 실행](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43674662634) 성공 · 전체 검사·Web/APK·Artifacts |
-| GitHub Pages | main 반영 후 자동 게시 확인 대기 |
+| GitHub 저장소 | main/develop/feature에 릴리스 기준 `137ba9f003ed272a5ed37333c309649774d3e3cb`, 태그 `v0.2.0-alpha` 저장 |
+| GitHub Actions | [태그 CI](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43675188530) 성공 · 전체 검사·Web/APK·Artifacts·Release |
+| GitHub Pages | [main CI](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43675188364)의 빌드는 성공, Pages 생성 API 403으로 게시 실패 |
+| 공개 APK Release | [v0.2.0-alpha](https://github.com/wnstn8879/cubeverse-3d/releases/tag/v0.2.0-alpha) 게시 성공 |
 | 비공개 Sites | 0.2.0 웹·APK 다운로드·빌드 상태 게시 성공 |
 | 실제 브라우저·Android | 미검증 |
 
@@ -76,3 +77,9 @@ Web·디버그 APK 내보내기, ZIP 무결성·v2/v3 서명·패키지·아키�
 - 게시 소스 저장소 커밋은 `761b4627b7bbb9a636f2d8cb46a38558c8af8c9b`, 게임 기능 커밋은 `9716165c7910906d96362df352a6ffeeb5108385`입니다.
 - 웹·`downloads.html`·`status.html`을 0.2.0으로 교체했습니다. 실제 브라우저 조작·실기기 설치 완료를 뜻하지 않습니다.
 - 최종 네이티브 화면은 `docs/pyraminx-v2.png`, `docs/pyraminx-course-v2.png`, `docs/three-color-v2.png`를 추가 확인했으며 게임 스크립트 오류가 없었습니다.
+
+## 공개 Release의 독립 CI 산출물
+
+태그 `v0.2.0-alpha`는 커밋 `137ba9f003ed272a5ed37333c309649774d3e3cb`를 가리킵니다. 태그 CI `43675188530`에서 모든 검사와 빌드, Release 게시가 성공했습니다. 공개 APK는 59,200,397바이트, SHA-256 `26900d3437e158c832986631ef11c1d4beabaa471c5fb05a05f54547dd263ff7`입니다. 로컬·Sites APK의 SHA-256 `2afefe0fdec5569d8e63bfe1fc874521eebcb51eae862a030295a0ed80265138`과 다릅니다. CI 디버그 키가 독립적이므로 크기·버전이 같아도 동일 서명 파일로 취급하지 않습니다.
+
+main CI `43675188364`는 검사·Web/APK 빌드에 성공했지만 Pages 생성 단계에서 `Resource not accessible by integration`으로 실패했습니다. 따라서 main 워크플로 전체나 GitHub Pages 게시가 성공했다고 표시하지 않습니다. 비공개 Sites와 공개 APK Release 성공은 이 실패와 구분합니다. Pages는 저장소 Settings → Pages → Source를 GitHub Actions로 설정한 뒤 재검증해야 합니다.
