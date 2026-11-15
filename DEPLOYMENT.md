@@ -2,13 +2,23 @@
 
 Godot **4.6.3 stable**, GDScript, Compatibility 렌더러를 사용한다. Web 내보내기는 스레드를 끄므로 GitHub Pages에서 COOP/COEP 헤더 없이 실행할 수 있다. Android는 `com.cubeverse.game`, API 24 이상 (Android 7), arm64-v8a 및 x86_64 테스트 APK다.
 
-## 현재 배포 상태
+## 현재 빌드 상태
 
-- 2026-11-12 로컬 `tools/build.sh all` 통과: 자동 엔진 검사 1,019개, 별도 프로세스 저장/복원, 앱 통합 검사 93개, 화면 터치 입력 검사 31개, Web/APK 내보내기 및 APK 서명/내용 검증 성공.
-- 로컬 빌드 경로: `build/web/index.html`, `build/android/CubeVerse-3D-debug.apk`.
-- GitHub 저장소 생성/푸시 권한을 확보하기 전까지 Actions 실행·Pages 공개 배포·Release 게시는 대기 상태다.
-- 아직 확인하지 않은 고정 웹 주소나 APK 다운로드 주소를 성공한 배포 링크로 표시하지 않는다.
-- Android 실기기 설치·프레임 성능·햅틱은 별도 검증이 필요하다. 빌드 성공은 실기기 검증 완료를 뜻하지 않는다.
+- 2026-11-15(KST) 로컬 `tools/build.sh all` 통과. 버전 **0.2.0-alpha**, Android 버전 코드 **2**.
+- 엔진 1,019개, 카메라 96개, 앱 통합 345개, 실제 합성 터치 GUI 92개, 오디오 851개, NxN 미니맵·모양 521개, 피라밍크스 미니맵 148개, 입문 학습 409개, 피라밍크스 엔진·뷰·학습 2,490개 검사 통과. 저장 복원·회귀 검사도 통과했다.
+- Web/APK 내보내기와 APK ZIP·v2/v3 서명·패키지·ABI 검증 통과. APK 안에 오디오 샘플 240개와 폰트 라이선스 동봉을 확인했다. 실제 내보낸 Web PCK도 네이티브 헤드리스 엔진에서 실행 오류 없이 열었다.
+- 로컬 빌드 경로: `build/web/index.html`, `build/android/CubeVerse-3D-debug.apk`. 최종 해시·리소스 지문은 `build/reports/final-manifest.json`을 따른다.
+- GitHub 저장소 `wnstn8879/cubeverse-3d`는 생성·연결되었고 기존 검증 버전의 원격 저장을 확인했다. 0.2.0의 원격 Actions·Pages·Release 상태는 실제 실행이 끝난 결과만 기준으로 기록한다.
+- Android 실기기 설치·프레임 성능·오디오 청감·햅틱은 미검증이다. 빌드 성공이나 합성 터치 검사는 실제 기기 검증을 대신하지 않는다.
+
+### 0.2.0 로컬 산출물
+
+| 파일 | 바이트 | SHA-256 |
+| --- | ---: | --- |
+| Web WASM | 37,700,666 | `26b61ce95247012ab3dca3ff51e96d1cdbff44ee91a8c20a83e150afca83f1b6` |
+| Web PCK | 3,122,540 | `09d7e3a472652ade5b61f4f8d509f6cc126957e3129ec378e8083ab4edd008b0` |
+| Android APK | 59,200,397 | `2afefe0fdec5569d8e63bfe1fc874521eebcb51eae862a030295a0ed80265138` |
+
 
 ## 로컬 재현
 
@@ -19,7 +29,7 @@ export JAVA_HOME=/path/to/jdk17
 export ANDROID_HOME=/path/to/android-sdk
 export XDG_DATA_HOME="$PWD/.tools/data"
 python3 tools/install_templates.py
-# 자동 import, 큐브/프로세스 재시작 테스트 후 두 플랫폼 내보내기
+# 자동 import, 전체 엔진·GUI·오디오·미니맵·학습 검사 후 두 플랫폼 내보내기
 ./tools/build.sh all
 python3 tools/write_build_status.py
 ```
@@ -36,7 +46,7 @@ python3 tools/write_build_status.py
 python3 -m http.server 8000 --directory build/web
 ```
 
-로컬 주소 `http://localhost:8000`을 연다. WASM은 `file://`로 열지 않는다. 원격 배포는 HTTPS를 사용해야 한다. 웹 오디오는 브라우저 정책에 따라 첫 터치 이후 활성화된다. 로컬 저장은 해당 브라우저/사이트의 저장소에 보관되며 시크릿 모드 종료나 사이트 데이터 삭제 시 사라질 수 있다. 브라우저 햅틱 지원 여부는 앱이 감지하며 지원하지 않는 환경에서는 비활성화한다.
+로컬 주소 `http://localhost:8000`을 연다. 관리형 클라우드 환경에서는 프로젝트의 미리보기 경로를 우선 사용한다. WASM은 `file://`로 열지 않는다. 원격 배포는 HTTPS를 사용해야 한다. 웹 오디오는 브라우저 정책에 따라 첫 터치 이후 활성화된다. 로컬 저장은 해당 브라우저/사이트의 저장소에 보관되며 시크릿 모드 종료나 사이트 데이터 삭제 시 사라질 수 있다. 브라우저 햅틱 지원 여부는 앱이 감지하며 지원하지 않는 환경에서는 비활성화한다.
 
 `status.html`은 이 빌드의 자동 테스트/Web/APK 성공 항목, 실제 커밋 SHA, 생성 시각과 Actions 실행 링크를 표시한다. 전체 제품 완성도를 임의 백분율로 계산하지 않는다.
 
@@ -45,7 +55,7 @@ python3 -m http.server 8000 --directory build/web
 `.github/workflows/build.yml`의 작업 순서:
 
 1. `main`, `develop`, `feature/**`, PR, `v*` 태그 또는 수동 실행에서 Godot/SDK 설치.
-2. headless import, 전체 엔진 테스트, 별도 프로세스 저장/복원 및 실제 게임 씬 통합 테스트와 화면 터치 GUI/큐브 입력 전달 검사.
+2. headless import, 전체 엔진·저장 복원·앱·합성 터치·오디오·미니맵·입문 학습·피라밍크스 검사.
 3. Web 릴리스 내보내기 및 Android 디버그 내보내기 후 APK 서명/ZIP/패키지/아키텍처 검증.
 4. 검사 로그, Web ZIP, APK를 30일 보관하는 Actions 아티팩트로 업로드.
 5. `main` 성공 빌드를 GitHub Pages에 배포. PR에는 배포 권한을 제공하지 않음.
@@ -75,7 +85,7 @@ adb install -r build/android/CubeVerse-3D-debug.apk
 - 테스트 APK: https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/downloads.html
 - 실제 빌드 현황: https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/status.html
 
-Sites의 게시 결과 `succeeded`를 확인했습니다. 본인 계정만 접근하며 공개 범위는 변경하지 않았습니다. 브라우저 조작·실기기 설치는 미검증입니다. GitHub 생성 권한 제한 때문에 이 미리보기를 먼저 게시했으며, GitHub Actions 자동 배포가 실행됐다는 의미는 아닙니다.
+이 주소의 기존 0.1.0 Sites 게시 결과 `succeeded`를 확인했습니다. 0.2.0 업데이트 결과는 게시 완료 후 README·PROGRESS에 기록합니다. 본인 계정만 접근하며 공개 범위는 변경하지 않았습니다. 브라우저 조작·실기기 설치는 미검증입니다. 초기 GitHub 저장소 생성 제한 때문에 이 미리보기를 먼저 게시했습니다. 현재 GitHub 소스 저장과 이 Sites 미리보기의 게시 상태는 별도로 확인합니다.
 
 원본 Web WASM(약36MiB)과 APK(약55MiB)를 18MiB 조각으로 전송하고 브라우저에서 원본 바이트로 재구성합니다. `tools/prepare_site.py`와 `tools/test_site.mjs`는 재구성 SHA-256·WASM 컴파일·fetch 통과를 검증합니다. APK 다운로드 페이지는 저장 전 SHA-256을 검사합니다.
 

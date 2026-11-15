@@ -7,6 +7,7 @@ var checks := 0
 var failures: Array[String] = []
 var touch_gui_supported := false
 var completed_moves := 0
+var map_face_taps := 0
 
 
 func _initialize() -> void:
@@ -57,11 +58,64 @@ func _run() -> void:
 	await _activate("홈")
 	_check(app.page == "홈" and app.view.input_enabled, "pointer returns to interactive play")
 	_check(app.state.state_key() == two_key, "GUI clicks never add cube turns")
+	await _test_minimap_faces(false)
 	await _test_touch_turn()
+	await _test_pyraminx_ui()
 	app.queue_free()
 	await process_frame
-	await create_timer(0.15).timeout
+	await create_timer(0.5).timeout
 	_finish()
+
+
+func _test_minimap_faces(is_pyraminx: bool) -> void:
+	await process_frame
+	await process_frame
+	var map = app.minimap
+	_check(is_instance_valid(map), "live face minimap exists for selected puzzle")
+	if not is_instance_valid(map): return
+	if is_pyraminx: map._layout()
+	else: map._layout_faces()
+	var rectangles: Array = map._hit_rects if is_pyraminx else map._face_hit_rects
+	var expected := 4 if is_pyraminx else 6
+	_check(rectangles.size() == expected, "minimap exposes every actual puzzle face")
+	map.face_selected.connect(_on_map_face)
+	var original: String = app.state.state_key()
+	var history_count: int = app.state.history.size()
+	for index in range(rectangles.size()):
+		var point: Vector2 = map.global_position + rectangles[index].get_center()
+		_check(root.get_visible_rect().has_point(point), "minimap face tap is visible: %d" % index)
+		var before: Vector3 = app.view.camera.position
+		var taps_before := map_face_taps
+		if touch_gui_supported: await _screen_tap(point)
+		else: await _mouse_click(point)
+		_check(map_face_taps == taps_before + 1, "touch selects a minimap face exactly once: %d" % index)
+		_check(app.view.camera.position.distance_to(before) > 0.01, "minimap touch changes actual camera: %d" % index)
+		_check(app.state.state_key() == original and app.state.history.size() == history_count, "minimap camera tap never rotates puzzle pieces: %d" % index)
+	map.face_selected.disconnect(_on_map_face)
+	app.view.reset_camera()
+
+
+func _on_map_face(_face: Variant) -> void:
+	map_face_taps += 1
+
+
+func _test_pyraminx_ui() -> void:
+	var saved_cube: String = app.state.state_key()
+	await _activate("큐브")
+	await _activate("△  피라밍크스", true)
+	_check(app.puzzle_kind == "pyraminx", "actual pointer selects the tetrahedral puzzle")
+	await _test_minimap_faces(true)
+	await _activate("큰 층")
+	_check(app.tip_mode and app.view.tip_mode, "tip UI mode reaches actual Pyraminx gesture renderer")
+	await _activate("U")
+	var deadline := Time.get_ticks_msec() + 2000
+	while app.view.is_busy() and Time.get_ticks_msec() < deadline:
+		await process_frame
+	_check(not app.view.is_busy(), "Pyraminx pointer move finishes within timeout")
+	_check(not app.state.history.is_empty() and int(app.state.history.back().layer) == 0, "Pyraminx pointer control turns the independent tip")
+	await _activate("큐브")
+	await _activate("2 × 2", true)
+	_check(app.puzzle_kind == "cube" and app.state.state_key() == saved_cube, "actual pointer returns to the saved classic cube")
 
 
 func _test_touch_turn() -> void:
@@ -115,6 +169,14 @@ func _activate(text: String, prefix := false, suffix := false) -> void:
 	_check(button != null, "pointer target exists: " + text)
 	if button == null:
 		return
+	var parent := button.get_parent()
+	while parent != null:
+		if parent is ScrollContainer:
+			parent.ensure_control_visible(button)
+			await process_frame
+			await process_frame
+			break
+		parent = parent.get_parent()
 	var point := button.get_global_rect().get_center()
 	_check(root.get_visible_rect().has_point(point), "pointer target lies in viewport: " + text)
 	if touch_gui_supported:

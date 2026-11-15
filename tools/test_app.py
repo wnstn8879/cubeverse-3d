@@ -33,14 +33,14 @@ def main() -> int:
         try:
             result = subprocess.run(
                 command, text=True, stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT, env=environment, timeout=45,
+                stderr=subprocess.STDOUT, env=environment, timeout=90,
             )
         except subprocess.TimeoutExpired as error:
             captured = error.stdout or b""
             if isinstance(captured, bytes):
                 captured = captured.decode(errors="replace")
             print(captured, end="")
-            print("Application integration checks exceeded 45 seconds", file=sys.stderr)
+            print("Application integration checks exceeded 90 seconds", file=sys.stderr)
             return 1
         print(result.stdout, end="", flush=True)
         summary = re.search(r"APP_TEST_RESULT checks=(\d+) failures=(\d+)", result.stdout)

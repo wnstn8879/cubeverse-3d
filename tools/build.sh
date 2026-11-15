@@ -10,14 +10,19 @@ touch build/.gdignore .tools/.gdignore
 export GODOT_BIN="${GODOT_BIN:-godot}"
 BUILD_TARGET="${1:-all}"
 case "$BUILD_TARGET" in all|web|android) ;; *) echo "Usage: tools/build.sh [all|web|android]" >&2; exit 2 ;; esac
+rm -f build/reports/tests.passed build/reports/web.passed build/reports/android.passed
 "$GODOT_BIN" --headless --path "$TASK_ROOT" --editor --import 2>&1 | tee build/reports/import.log
-if rg -q 'SCRIPT ERROR|Parse Error|Failed to load script' build/reports/import.log; then
+if rg -q 'SCRIPT ERROR|^ERROR:|Parse Error|Failed to load script' build/reports/import.log; then
   exit 1
 fi
-rm -f build/reports/tests.passed build/reports/web.passed build/reports/android.passed
 python3 tests/run_tests.py 2>&1 | tee build/reports/tests.log
 python3 tools/test_app.py 2>&1 | tee build/reports/app-tests.log
 python3 tools/test_mobile_ui.py 2>&1 | tee build/reports/mobile-ui-tests.log
+python3 tools/test_audio.py 2>&1 | tee build/reports/audio-tests.log
+python3 tools/test_minimap.py 2>&1 | tee build/reports/minimap-tests.log
+python3 tools/test_pyraminx_minimap.py 2>&1 | tee build/reports/pyraminx-minimap-tests.log
+python3 tools/test_academy.py 2>&1 | tee build/reports/academy-tests.log
+python3 tools/test_pyraminx.py 2>&1 | tee build/reports/pyraminx-tests.log
 if rg -q 'SCRIPT ERROR|Parse Error|Failed to load script' build/reports/tests.log; then
   exit 1
 fi

@@ -44,6 +44,60 @@ var _pinch_distance := 0.0
 var _pinching := false
 var _mouse_down := false
 var _history_action := 0
+var variant: String = "classic"
+var _palette: Array = PALETTE.duplicate()
+var _input_exclusions: Array[Rect2] = []
+
+
+func get_palette() -> Array:
+	return _palette.duplicate()
+
+
+func set_variant(id: String) -> bool:
+	if id not in ["classic", "three_color", "pillow", "crystal", "neon"] or is_busy():
+		return false
+	variant = id
+	_palette = PALETTE.duplicate()
+	match id:
+		"three_color":
+			_palette = [Color("73eac4"), Color("73eac4"), Color("f785a2"), Color("f785a2"), Color("f9d077"), Color("f9d077")]
+		"pillow":
+			_palette = [Color("f8a3bd"), Color("ffcead"), Color("fff9ec"), Color("fae49b"), Color("a5e9d6"), Color("b6b7f5")]
+		"crystal":
+			_palette = [Color("e57bba"), Color("ffc495"), Color("e6f9ff"), Color("f0df8d"), Color("6ad8d3"), Color("829ef0")]
+		"neon":
+			_palette = [Color("ff4f8f"), Color("ff9862"), Color("c7f4ff"), Color("f3fb58"), Color("43f5c9"), Color("7a7bff")]
+	if _material != null:
+		_material.roughness = 0.16 if id == "crystal" else (0.66 if id == "pillow" else 0.31)
+		_material.metallic = 0.32 if id == "crystal" else 0.0
+		_material.emission_enabled = id == "neon"
+		_material.emission = Color(0.12, 0.15, 0.20) if id == "neon" else Color.BLACK
+		_highlight_material.roughness = _material.roughness
+		_highlight_material.metallic = _material.metallic
+		rebuild()
+		_fit_camera()
+	return true
+
+
+func set_input_exclusion_rects(rects: Array) -> void:
+	_input_exclusions.clear()
+	for rect in rects:
+		if rect is Rect2: _input_exclusions.append(rect)
+
+
+func set_face_camera(normal: Vector3i) -> bool:
+	if normal not in [Vector3i.RIGHT, Vector3i.LEFT, Vector3i.UP, Vector3i.DOWN, Vector3i.BACK, Vector3i.FORWARD] or is_busy():
+		return false
+	cancel_drag()
+	if normal.y != 0:
+		yaw = 0.0
+		pitch = float(normal.y) * 1.37
+	else:
+		yaw = atan2(float(normal.x), float(normal.z))
+		pitch = 0.0
+	_update_camera()
+	_fit_camera()
+	return true
 
 
 func _ready() -> void:
@@ -87,6 +141,7 @@ func _ready() -> void:
 	rim.light_energy = 0.35
 	add_child(rim)
 	get_viewport().msaa_3d = Viewport.MSAA_2X
+	set_variant(variant)
 	_update_camera()
 	if state != null:
 		rebuild()
@@ -209,9 +264,10 @@ func _fit_camera() -> void:
 	# Fit projected corners, including perspective, into the actual UI play area.
 	for iteration in range(3):
 		var ratio := 0.0
-		for x in [-CUBE_HALF, CUBE_HALF]:
-			for y in [-CUBE_HALF, CUBE_HALF]:
-				for z in [-CUBE_HALF, CUBE_HALF]:
+		var half := CUBE_HALF * (1.08 if variant in ["pillow", "crystal"] else 1.0)
+		for x in [-half, half]:
+			for y in [-half, half]:
+				for z in [-half, half]:
 					var delta := camera.unproject_position(to_global(Vector3(x,y,z))) - center
 					ratio = maxf(ratio, maxf(absf(delta.x) / (target.size.x * 0.5), absf(delta.y) / (target.size.y * 0.5)))
 		distance = maxf(5.0, distance * ratio * 1.01)
@@ -254,6 +310,8 @@ func _notification(what: int) -> void:
 
 
 func _inside(point: Vector2) -> bool:
+	for excluded in _input_exclusions:
+		if excluded.has_point(point): return false
 	return interaction_rect.has_point(point) if interaction_rect.size.x > 0.0 else get_viewport().get_visible_rect().has_point(point)
 
 
@@ -469,8 +527,13 @@ func _build_mesh(axis: int, layer: int, selected: bool) -> ArrayMesh:
 			continue
 		var normal := Vector3(sticker.n)
 		var position := (Vector3(p) - Vector3.ONE * center) * cell + normal * cell * 0.481
-		var color: Color = PALETTE[clampi(sticker.c, 0, 5)]
-		_add_rounded_face(vertices, normals, colors, indices, position, normal, cell * 0.415, cell * 0.065, color)
+		var color: Color = _palette[clampi(sticker.c, 0, 5)]
+		if variant == "pillow":
+			_add_pillow_face(vertices, normals, colors, indices, position, normal, cell * 0.43, cell * 0.15, color)
+		elif variant == "crystal":
+			_add_crystal_face(vertices, normals, colors, indices, position, normal, cell * 0.43, cell * 0.14, color)
+		else:
+			_add_rounded_face(vertices, normals, colors, indices, position, normal, cell * 0.415, cell * 0.065, color)
 	var mesh := ArrayMesh.new()
 	if vertices.is_empty():
 		return mesh
@@ -520,3 +583,76 @@ func _add_rounded_face(vertices: PackedVector3Array, normals: PackedVector3Array
 		indices.append(base)
 		indices.append(base + 1 + (index + 1) % ring.size())
 		indices.append(base + 1 + index)
+
+
+func _add_pillow_face(vertices: PackedVector3Array, normals: PackedVector3Array, colors: PackedColorArray, indices: PackedInt32Array, center: Vector3, normal: Vector3, half_size: float, height: float, color: Color) -> void:
+	# Concentric rounded-square rings form a genuinely convex cushion surface.
+	var tangent := Vector3.RIGHT if absf(normal.x) < 0.5 else Vector3.BACK
+	var bitangent := normal.cross(tangent)
+	var perimeter: Array[Vector2] = []
+	var radius := half_size * 0.32
+	# Tiny stickers need less tessellation; keep high-order puzzles responsive.
+	var corner_steps := 2 if state.size > 5 else 4
+	var ring_count := 2 if state.size > 5 else 4
+	for corner in range(4):
+		var theta := float(corner) * PI * 0.5
+		var corner_center := Vector2(cos(theta + PI * 0.25), sin(theta + PI * 0.25)).sign() * (half_size - radius)
+		for step in range(corner_steps):
+			var angle := theta + float(step) * PI * 0.5 / float(corner_steps - 1)
+			perimeter.append(corner_center + Vector2(cos(angle), sin(angle)) * radius)
+	var base := vertices.size()
+	vertices.append(center + normal * height)
+	normals.append(normal)
+	colors.append(color.lightened(0.06))
+	for ring in range(1, ring_count + 1):
+		var fraction := float(ring) / float(ring_count)
+		var elevation := height * (1.0 - fraction * fraction)
+		for point in perimeter:
+			var planar: Vector2 = point * fraction
+			vertices.append(center + tangent * planar.x + bitangent * planar.y + normal * elevation)
+			var surface_normal := (normal + (tangent * planar.x + bitangent * planar.y) * (2.0 * height / (half_size * half_size))).normalized()
+			normals.append(surface_normal)
+			colors.append(color.lightened(0.06 * (1.0 - fraction)))
+	var count := perimeter.size()
+	for edge in range(count):
+		var next := (edge + 1) % count
+		indices.append_array(PackedInt32Array([base, base + 1 + next, base + 1 + edge]))
+	for ring in range(ring_count - 1):
+		var inner := base + 1 + ring * count
+		var outer := inner + count
+		for edge in range(count):
+			var next := (edge + 1) % count
+			indices.append_array(PackedInt32Array([inner + edge, inner + next, outer + next, inner + edge, outer + next, outer + edge]))
+
+
+func _add_crystal_face(vertices: PackedVector3Array, normals: PackedVector3Array, colors: PackedColorArray, indices: PackedInt32Array, center: Vector3, normal: Vector3, half_size: float, height: float, color: Color) -> void:
+	# A cut gemstone plate has a raised eight-sided crown and beveled facets.
+	var tangent := Vector3.RIGHT if absf(normal.x) < 0.5 else Vector3.BACK
+	var bitangent := normal.cross(tangent)
+	var outline: Array[Vector2] = [Vector2(-0.58,-1),Vector2(0.58,-1),Vector2(1,-0.58),Vector2(1,0.58),Vector2(0.58,1),Vector2(-0.58,1),Vector2(-1,0.58),Vector2(-1,-0.58)]
+	if state.size > 5:
+		outline = [Vector2(-0.9,-0.9),Vector2(0.9,-0.9),Vector2(0.9,0.9),Vector2(-0.9,0.9)]
+	for edge in range(outline.size()):
+		var next := (edge + 1) % outline.size()
+		var low_a := center + (tangent * outline[edge].x + bitangent * outline[edge].y) * half_size
+		var low_b := center + (tangent * outline[next].x + bitangent * outline[next].y) * half_size
+		var high_a := center + (tangent * outline[edge].x + bitangent * outline[edge].y) * half_size * 0.70 + normal * height * 0.72
+		var high_b := center + (tangent * outline[next].x + bitangent * outline[next].y) * half_size * 0.70 + normal * height * 0.72
+		var peak := center + normal * height
+		_add_flat_triangle(vertices, normals, colors, indices, low_a, high_b, low_b, color.darkened(0.13 if edge % 2 == 0 else 0.02))
+		_add_flat_triangle(vertices, normals, colors, indices, low_a, high_a, high_b, color.darkened(0.13 if edge % 2 == 0 else 0.02))
+		_add_flat_triangle(vertices, normals, colors, indices, peak, high_b, high_a, color.lightened(0.12 if edge % 2 == 0 else 0.02))
+
+
+func _add_flat_triangle(vertices: PackedVector3Array, normals: PackedVector3Array, colors: PackedColorArray, indices: PackedInt32Array, a: Vector3, b: Vector3, c: Vector3, color: Color) -> void:
+	var base := vertices.size()
+	var normal := (b - a).cross(c - a).normalized()
+	# Godot's clockwise front-face winding uses the opposite geometric cross.
+	normal = -normal
+	for point in [a,b,c]:
+		vertices.append(point)
+		normals.append(normal)
+		colors.append(color)
+	indices.append(base)
+	indices.append(base + 1)
+	indices.append(base + 2)

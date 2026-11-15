@@ -24,12 +24,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Java 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          # The action's default also requests obsolete SDK package "tools".
+          packages: platform-tools
+          log-accepted-android-sdk-licenses: false
       - name: Install Android build components
         run: sdkmanager 'platform-tools' 'platforms;android-36' 'build-tools;36.0.0'
       - name: Cache exact Godot release and templates
@@ -97,6 +101,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
+      - name: Enable and configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Deploy verified web build
         id: deploy
         uses: actions/deploy-pages@v4

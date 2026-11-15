@@ -35,13 +35,15 @@ func _run() -> void:
 	await _test_navigation()
 	await _test_animated_history()
 	await _test_cube_selection()
+	await _test_variants_and_pyraminx()
 	await _test_timer()
 	await _test_lessons()
+	await _test_pyraminx_lesson()
 	await _test_restart()
 	application.queue_free()
 	await process_frame
 	# Let the audio server release stopped stream references before engine shutdown.
-	await create_timer(0.15).timeout
+	await create_timer(0.5).timeout
 	_finish()
 
 
@@ -103,6 +105,66 @@ func _test_cube_selection() -> void:
 	await process_frame
 
 
+func _test_variants_and_pyraminx() -> void:
+	var original: String = application.state.state_key()
+	var snapshots: Dictionary = {}
+	for id in ["three_color", "pillow", "crystal", "neon"]:
+		application._select_variant(id)
+		await process_frame
+		_check(application.variant == id and application.puzzle_kind == "cube", "appearance selector reaches actual cube: " + id)
+		_check(application.view.variant == id, "renderer receives selected geometry/palette: " + id)
+		_check(is_instance_valid(application.minimap) and application.minimap.state == application.state, "minimap follows actual variant state: " + id)
+		var before: String = application.state.state_key()
+		application._face_move("F")
+		await _wait_idle("variant " + id)
+		_check(application.state.state_key() != before, "appearance retains legal playable rotations: " + id)
+		snapshots[id] = application.state.state_key()
+	# On the three-color puzzle, opposite colors intentionally look identical.
+	# A middle half-turn changes exact six-color state but remains visibly solved.
+	application._select_variant("three_color")
+	await process_frame
+	application.state.reset(3)
+	application.state.apply_move(0, 1, 2)
+	application.view.rebuild()
+	_check(not application.state.is_solved() and application._is_solved(), "three-color solved detection follows visible color pairs")
+	snapshots["three_color"] = application.state.state_key()
+	for id in snapshots:
+		application._select_variant(id)
+		await process_frame
+		_check(application.state.state_key() == snapshots[id], "variant switching preserves its independent puzzle: " + id)
+	application._select_variant("classic")
+	await process_frame
+	_check(application.state.state_key() == original, "new variants do not overwrite classic saved progress")
+	application._select_pyraminx()
+	await process_frame
+	_check(application.puzzle_kind == "pyraminx" and application.state.puzzle_id == "pyraminx", "Pyraminx uses its separate tetrahedral state engine")
+	_check(application.state.is_solved(), "new Pyraminx starts solved")
+	var tetrahedron: String = application.state.state_key()
+	application._face_move("U")
+	await _wait_idle("Pyraminx main turn")
+	var turned: String = application.state.state_key()
+	_check(turned != tetrahedron and not application.state.is_solved(), "Pyraminx120-degree main turn changes real puzzle state")
+	application._undo()
+	await _wait_idle("Pyraminx undo")
+	_check(application.state.state_key() == tetrahedron, "Pyraminx animated undo restores tetrahedron")
+	application._redo()
+	await _wait_idle("Pyraminx redo")
+	_check(application.state.state_key() == turned, "Pyraminx animated redo restores turn")
+	application._toggle_tip()
+	application._face_move("R")
+	await _wait_idle("Pyraminx tip turn")
+	_check(int(application.state.history.back().layer) == 0, "Pyraminx tip mode commits independent tip rotation")
+	var saved_pyraminx: String = application.state.state_key()
+	application._select_cube(3)
+	await process_frame
+	_check(application.state.state_key() == original, "returning from Pyraminx restores original classic puzzle")
+	application._select_pyraminx()
+	await process_frame
+	_check(application.state.state_key() == saved_pyraminx, "Pyraminx has independent durable puzzle progress")
+	application._select_cube(3)
+	await process_frame
+
+
 func _test_timer() -> void:
 	application.state.reset(3)
 	application.view.setup(application.state)
@@ -142,18 +204,62 @@ func _test_lessons() -> void:
 	for n in [2, 3]:
 		application._start_lesson(n)
 		await process_frame
-		_check(application.practice and application.page == "아카데미", "%dx%d lesson opens playable practice" % [n, n])
-		_check(not application.state.is_solved(), "%dx%d lesson starts from training state" % [n, n])
-		for step in range(4):
-			application._lesson_next()
-			await _wait_idle("%dx%d lesson step %d" % [n, n, step + 1])
-			_check(application.lesson_step == step + 1, "%dx%d lesson advances after correct move %d" % [n, n, step + 1])
-		_check(application.state.is_solved(), "%dx%d four inverse moves solve lesson" % [n, n])
-		_check(bool(application.data.progress.get("inverse_" + str(n), false)), "%dx%d lesson marks genuine completion" % [n, n])
+		_check(application.practice and application.page == "아카데미", "%dx%d course opens playable practice" % [n, n])
+		_check(application.lesson_stages.size() >= (9 if n == 3 else 5), "%dx%d course teaches introductions and full method stages" % [n, n])
+		_check(not application.state.is_solved(), "%dx%d course starts from a prepared unsolved example" % [n, n])
+		var stages: Array = application.lesson_stages.duplicate(true)
+		for index in range(stages.size()):
+			var stage: Dictionary = stages[index]
+			_check(application.lesson_stage_index == index, "%dx%d opens stage %d in order" % [n, n, index])
+			_check(not str(stage.get("title", "")).is_empty() and not str(stage.get("explanation", "")).is_empty(), "%dx%d stage %d includes plain-language teaching" % [n, n, index])
+			_check(not str(stage.get("goal", "")).is_empty(), "%dx%d stage %d states a visible goal" % [n, n, index])
+			var steps: Array = stage.moves
+			if not steps.is_empty():
+				application._advance_lesson_stage()
+				await process_frame
+				_check(application.lesson_stage_index == index, "%dx%d stage %d cannot be skipped before solving" % [n, n, index])
+			for step in range(steps.size()):
+				application._lesson_next()
+				await _wait_idle("%dx%d stage %d move %d" % [n, n, index, step])
+				_check(application.lesson_step == step + 1, "%dx%d stage %d commits correct hint %d" % [n, n, index, step])
+			if index == stages.size() - 1:
+				_check(application.state.is_solved(), "%dx%d complete method solves all six actual faces" % [n, n])
+			application._advance_lesson_stage()
+			await process_frame
+		_check(bool(application.data.progress.get("beginner_" + str(n) + "_complete", false)), "%dx%d course records full completion" % [n, n])
 		var saved: Dictionary = application.store.load_data()
-		_check(bool(saved.progress.get("inverse_" + str(n), false)), "%dx%d lesson completion persisted to disk" % [n, n])
+		_check(bool(saved.progress.get("beginner_" + str(n) + "_complete", false)), "%dx%d course completion persists to disk" % [n, n])
+		application._navigate("홈")
+		await process_frame
+
+
+func _test_pyraminx_lesson() -> void:
+	var free_key: String = application.state.state_key()
+	application._start_pyraminx_lesson()
+	await process_frame
+	_check(application.practice and application.puzzle_kind == "pyraminx", "Pyraminx course uses its own playable puzzle")
+	_check(application.lesson_stages.size() >= 5, "Pyraminx teaches pieces, notation, tips, centers and edges")
+	var stages: Array = application.lesson_stages.duplicate(true)
+	for index in range(stages.size()):
+		var stage: Dictionary = stages[index]
+		_check(application.lesson_stage_index == index, "Pyraminx course opens stage %d in order" % index)
+		_check(not str(stage.get("explanation", "")).is_empty() and not str(stage.get("goal", "")).is_empty(), "Pyraminx stage %d has beginner explanations" % index)
+		if not stage.moves.is_empty():
+			application._advance_lesson_stage()
+			_check(application.lesson_stage_index == index, "Pyraminx stage %d requires actual turns before advancing" % index)
+		for step in range(stage.moves.size()):
+			application._lesson_next()
+			await _wait_idle("Pyraminx stage %d move %d" % [index, step])
+			_check(application.lesson_step == step + 1, "Pyraminx follows correct120-degree hint %d/%d" % [index, step])
+		if index == stages.size() - 1:
+			_check(application.state.is_solved(), "Pyraminx full course actually solves all four faces")
+		application._advance_lesson_stage()
+		await process_frame
+	_check(bool(application.data.progress.get("beginner_pyraminx_complete", false)), "Pyraminx course records completion")
+	_check(bool(application.store.load_data().progress.get("beginner_pyraminx_complete", false)), "Pyraminx course completion survives local save")
 	application._navigate("홈")
 	await process_frame
+	_check(application.puzzle_kind == "cube" and application.state.state_key() == free_key, "Pyraminx course preserves and restores prior classic puzzle")
 
 
 func _test_restart() -> void:
@@ -164,15 +270,16 @@ func _test_restart() -> void:
 	var record_count: int = application.data.records.size()
 	application.queue_free()
 	await process_frame
-	await create_timer(0.15).timeout
+	await create_timer(0.5).timeout
 	application = packed_scene.instantiate()
 	root.add_child(application)
 	await process_frame
 	_check(application.state.size == 3 and application.state.state_key() == key, "app recreation restores selected cube and exact state")
 	_check(application.sound.preset == "plastic" and application.data.settings.sound == "plastic", "app recreation restores selected sound")
 	_check(application.data.records.size() == record_count and record_count > 0, "app recreation restores local records")
-	_check(bool(application.data.progress.get("inverse_2", false)) and bool(application.data.progress.get("inverse_3", false)), "app recreation restores both academy completions")
+	_check(bool(application.data.progress.get("beginner_2_complete", false)) and bool(application.data.progress.get("beginner_3_complete", false)), "app recreation restores both academy completions")
 	_check(application.data.cubes.has("2") and application.data.cubes.has("10"), "app recreation retains multiple cube states")
+	_check(bool(application.data.progress.get("beginner_pyraminx_complete", false)), "app recreation restores Pyraminx course completion")
 
 
 func _wait_idle(label: String) -> void:
