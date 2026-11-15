@@ -24,10 +24,10 @@
 | 피라밍크스 | 2,490개 검사 통과 · 상태·뷰·학습 |
 | 실제 GUI 터치 통합 | 92개·실패 0 · 미니맵의 에뮬레이션 마우스 선행 중복 수정 확인 |
 | 0.2.0 Web/APK | 전체 파이프라인·내보내기·APK 서명/내용 검증 통과 · `build/reports/final-manifest.json` |
-| GitHub | [저장소](https://github.com/wnstn8879/cubeverse-3d) 접근·기존 버전 푸시 완료 |
-| GitHub Actions | [첫 실행](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43566780587)의 SDK 설치 오류 확인·워크플로 수정, 새 실행 대기 |
-| GitHub Pages | 설정 변경 API 403 · 사용자의 Source → GitHub Actions 설정 확인 필요 |
-| Sites | 기존 0.1.0 비공개 게시본 유지 · 0.2.0 교체 대기 |
+| GitHub | [저장소](https://github.com/wnstn8879/cubeverse-3d)에 0.2.0 기능 커밋 `9716165` 저장·CI 통과 |
+| GitHub Actions | [0.2.0 기능 브랜치 실행](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43674662634) 성공 · 전체 검사·Web/APK·Artifacts |
+| GitHub Pages | main 성공 빌드의 자동 설정·배포 확인 대기 |
+| Sites | 0.2.0 비공개 웹·APK 다운로드·상태 페이지 게시 성공 |
 | 실기기 | Android 설치·청감·진동·60FPS 미검증 |
 
 모듈 검사와 전체 앱·터치·최종 빌드를 모두 통과했습니다. 최종 빌드 manifest 생성 시각은 `2026-11-15T03:56:11.303051+00:00`이며, 원격 게시와 실제 기기 검증은 별도로 확인합니다. 실패한 항목을 완료로 표시하지 않습니다. 학습 과정은 준비된 예제이며 임의 상태 풀이기는 미구현입니다.
@@ -36,12 +36,12 @@
 
 1. 미니맵 실제 GUI 터치 92개 통과 결과를 최종 빌드 검사에 포함하고 최신 앱·학습·저장 회귀를 확인합니다.
 2. 통과한 0.2.0 최종 빌드를 보존합니다. 리소스가 바뀌면 해당 검사와 필요한 빌드를 다시 수행합니다.
-3. 결과를 검토하고 `feature/asmr-academy-puzzles`에 커밋·푸시합니다. 검증 후 `develop`과 `main`에 반영합니다.
-4. GitHub Actions 실제 로그·Artifacts·Pages·Release 결과를 확인합니다. Pages 권한 제한은 기존 Sites 미리보기 갱신과 별개로 처리합니다.
-5. 최종 Web/APK를 기존 Sites에 게시하고 이 문서·README·TEST_REPORT의 버전·주소·커밋을 확정합니다.
+3. 통과한 기능 브랜치를 `develop`과 `main`에 반영하고 `v0.2.0-alpha` 태그 빌드를 확인합니다.
+4. 기능 브랜치 CI·Artifacts는 통과했습니다. main Pages와 태그 Release 실제 결과를 추가 확인합니다.
+5. 0.2.0 Sites 게시를 완료했습니다. 아래 ID·기능 커밋·산출물 해시를 기준으로 다음 수정을 이어갑니다.
 6. Android 실제 기기에서 설치·멀티터치·강제 종료 후 복원·청감·햅틱·성능을 확인합니다.
 
-## 환경·기존 게시 인수인계
+## 환경·현재 게시 인수인계
 
 - 편집 프로젝트: `/workspace/cubeverse-3d`
 - GitHub: https://github.com/wnstn8879/cubeverse-3d
@@ -49,8 +49,10 @@
 - APK 페이지: https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/downloads.html
 - 게시 현황: https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/status.html
 - Sites project_id: `appgprj_6af5d70449908191b003fe9ace1bc88e`
-- 기존 0.1.0 성공 deployment_id: `appgdep_6af5dac514bc8191ac9027fe9afce51c`
-- 기존 Sites 소스 커밋: `3170b31c1b32dbf14acd6a30298ca61fc54b4722`
+- 0.2.0 성공 deployment_id: `appgdep_6af92e958b6c819188a60f133a29c482`
+- 0.2.0 Sites 소스 커밋: `761b4627b7bbb9a636f2d8cb46a38558c8af8c9b`
+- 기능 기준 커밋: `9716165c7910906d96362df352a6ffeeb5108385`
+- GitHub CI 성공 실행: `43674662634`
 - 배포 전용 체크아웃: `/workspace/sites/cubeverse-play`
 
 Sites 수정 시 기존 ID와 비공개 접근을 유지합니다. 단기 자격증명은 출력·파일·Git에 저장하지 않습니다. 호스팅 자산은 18MiB 조각으로 재구성하며, 소스 전송은 1회 64MiB 한도 이하의 여러 커밋으로 나눕니다. 전체 제품 완성도를 임의 백분율로 표시하지 않습니다.

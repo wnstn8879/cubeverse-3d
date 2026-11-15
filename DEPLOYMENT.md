@@ -61,7 +61,7 @@ python3 -m http.server 8000 --directory build/web
 5. `main` 성공 빌드를 GitHub Pages에 배포. PR에는 배포 권한을 제공하지 않음.
 6. `v*` 태그가 성공한 경우 테스트 APK를 GitHub prerelease에 첨부.
 
-저장소 관리자는 최초 한 번 **Settings → Pages → Source → GitHub Actions**를 활성화해야 한다. `github-pages` 환경의 승인 규칙이나 조직 정책이 있으면 그 규칙을 따른다. 현재 연결에 관리 권한이 제공되면 이 설정은 에이전트가 적용할 수 있다.
+Pages 작업은 `actions/configure-pages@v5`의 `enablement: true`로 최초 활성화를 시도합니다. 저장소 정책으로 거절되면 관리자가 **Settings → Pages → Source → GitHub Actions**를 선택해야 합니다. `github-pages` 환경의 승인 규칙이나 조직 정책이 있으면 그 규칙을 따른다. 현재 연결에 관리 권한이 제공되면 이 설정은 에이전트가 적용할 수 있다.
 
 Actions 성공 여부는 실제 실행 화면에서 확인해야 한다. 워크플로 파일 작성만으로 성공 배지를 표시하지 않는다. 테스트가 실패한 커밋은 `main`에 병합하지 않는다. 배포 실패 시 `pages` 작업 로그와 빌드의 `build-reports-<SHA>` 아티팩트를 확인한다.
 
@@ -85,8 +85,10 @@ adb install -r build/android/CubeVerse-3D-debug.apk
 - 테스트 APK: https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/downloads.html
 - 실제 빌드 현황: https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/status.html
 
-이 주소의 기존 0.1.0 Sites 게시 결과 `succeeded`를 확인했습니다. 0.2.0 업데이트 결과는 게시 완료 후 README·PROGRESS에 기록합니다. 본인 계정만 접근하며 공개 범위는 변경하지 않았습니다. 브라우저 조작·실기기 설치는 미검증입니다. 초기 GitHub 저장소 생성 제한 때문에 이 미리보기를 먼저 게시했습니다. 현재 GitHub 소스 저장과 이 Sites 미리보기의 게시 상태는 별도로 확인합니다.
+이 주소에 0.2.0 Sites 게시 결과 `succeeded`를 확인했습니다. 게시 ID는 `appgdep_6af92e958b6c819188a60f133a29c482`이며, 코드 기준 커밋은 `9716165c7910906d96362df352a6ffeeb5108385`입니다. 본인 계정만 접근하며 공개 범위는 변경하지 않았습니다. 브라우저 조작·실기기 설치는 미검증입니다. 초기 GitHub 저장소 생성 제한 때문에 이 미리보기를 먼저 게시했습니다. 현재 GitHub 소스 저장과 이 Sites 미리보기의 게시 상태는 별도로 확인합니다.
 
 원본 Web WASM(약36MiB)과 APK(약55MiB)를 18MiB 조각으로 전송하고 브라우저에서 원본 바이트로 재구성합니다. `tools/prepare_site.py`와 `tools/test_site.mjs`는 재구성 SHA-256·WASM 컴파일·fetch 통과를 검증합니다. APK 다운로드 페이지는 저장 전 SHA-256을 검사합니다.
 
 배포 전용 소스는 `/workspace/sites/cubeverse-play`입니다. 기본 제공 Sites 소스 헬퍼가 이 환경에 없어 `tools/publish_site_source.py`를 사용했습니다. 대상 URL·프로젝트 ID를 고정 검증하며 자격증명은 숨겨진 stdin으로만 받아 프로세스 메모리에서 사용합니다. 원격은 1회 푸시64MiB 제한이 있어 Web/APK를 별도 커밋으로 나눕니다. 다음 세션에는 Sites 스킬을 읽고 기존 project_id를 재사용하세요.
+
+기능 브랜치 원격 검증: [Actions 43674662634](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43674662634)에서 0.2.0 전체 테스트·Web/APK·아티팩트 업로드가 성공했습니다. 최초 SDK 오류는 폐기된 `tools` 패키지 설치를 제거해 해결했습니다.

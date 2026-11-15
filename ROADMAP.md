@@ -10,8 +10,9 @@
 - [x] 실제 빌드 항목과 커밋을 표시하는 상태 페이지
 - [x] 0.1.0 Web·디버그 APK 내보내기와 비공개 Sites 게시
 - [x] 0.2.0 최종 검사·Web/APK 빌드·서명 검증
-- [ ] 0.2.0 GitHub 푸시·Sites 갱신
-- [ ] GitHub Actions 실제 성공·APK Artifacts/Release 확인
+- [x] 0.2.0 기능 브랜치 GitHub 푸시·Sites 갱신
+- [x] GitHub Actions 기능 브랜치 실행·Web/APK Artifacts 성공
+- [ ] 태그 빌드와 GitHub Release 확인
 - [ ] GitHub Pages 활성화와 게시 주소 확인
 
 ## Phase 1 — NxN 조작

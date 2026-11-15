@@ -37,10 +37,10 @@ Linux OpenGL 소프트웨어 렌더링에서 홈·학습·피라밍크스·쿠�
 | --- | --- |
 | 최신 0.2.0 Web/APK | 전체 검사·Web/APK 내보내기 통과 |
 | 0.2.0 APK 서명·해시 | ZIP 무결성·v2/v3 서명·패키지·아키텍처·폰트 라이선스 확인 통과 |
-| GitHub 저장소 | 생성·접근 확인, 기존 검증 버전 `787f2e5` 푸시 완료 |
-| GitHub Actions | [첫 실행](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43566780587) SDK 설치 단계 실패; 설정 수정 후 새 실행 대기 |
-| GitHub Pages | 설정 API 403, 사용자 설정 확인 필요 |
-| 비공개 Sites | 기존 0.1.0 게시 성공, 0.2.0 교체 대기 |
+| GitHub 저장소 | 0.2.0 기능 커밋 `9716165c7910906d96362df352a6ffeeb5108385` 푸시 완료 |
+| GitHub Actions | [기능 브랜치 실행](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43674662634) 성공 · 전체 검사·Web/APK·Artifacts |
+| GitHub Pages | main 반영 후 자동 게시 확인 대기 |
+| 비공개 Sites | 0.2.0 웹·APK 다운로드·빌드 상태 게시 성공 |
 | 실제 브라우저·Android | 미검증 |
 
 ## 0.2.0 최종 산출물
@@ -53,13 +53,13 @@ Linux OpenGL 소프트웨어 렌더링에서 홈·학습·피라밍크스·쿠�
 | `build/web/index.pck` | 3,122,540 | `09d7e3a472652ade5b61f4f8d509f6cc126957e3129ec378e8083ab4edd008b0` |
 | `build/web/index.wasm` | 37,700,666 | `26b61ce95247012ab3dca3ff51e96d1cdbff44ee91a8c20a83e150afca83f1b6` |
 
-APK는 `com.cubeverse.game`, `0.2.0-alpha`(코드 2), 최소 API 24·대상 API 36, arm64-v8a/x86_64 대상입니다. 실제 설치·실행 검증과 구분합니다. 런타임 리소스 지문은 `e1788e26085dbd5df94c91f9a3f4c12e1984d467d654df831ce1e6f639fdd70b`입니다. 검사 로그와 파일별 지문은 `build/reports/final-manifest.json`에 있습니다.
+위 파일 해시는 로컬에서 검증하고 Sites로 게시한 산출물 기준입니다. GitHub CI APK는 디버그 키와 빌드 메타데이터가 달라 해시가 다를 수 있습니다. APK는 `com.cubeverse.game`, `0.2.0-alpha`(코드 2), 최소 API 24·대상 API 36, arm64-v8a/x86_64 대상입니다. 실제 설치·실행 검증과 구분합니다. 런타임 리소스 지문은 `e1788e26085dbd5df94c91f9a3f4c12e1984d467d654df831ce1e6f639fdd70b`입니다. 검사 로그와 파일별 지문은 `build/reports/final-manifest.json`에 있습니다.
 
 ## 기존 0.1.0 검증 이력
 
 Web·디버그 APK 내보내기, ZIP 무결성·v2/v3 서명·패키지·아키텍처 확인을 통과했습니다. 기존 APK는 `com.cubeverse.game`, `0.1.0-alpha`(코드 1), API 24 이상·대상 API 36, arm64-v8a/x86_64, 57,881,764바이트, SHA-256 `61c4a0f66b549cf7cf9dbe3cd48bf7e46bf1fbde2dc18b7f5766e697bafad9a5`입니다. 이 값은 0.2.0 APK의 값이 아닙니다.
 
-기존 Sites 게시 결과는 `succeeded`, deployment_id `appgdep_6af5dac514bc8191ac9027fe9afce51c`입니다. 서버 게시 성공은 실제 브라우저 조작 성공과 구분합니다. 정적 호스팅 어댑터의 WASM·APK 재조합 SHA-256, `WebAssembly.compileStreaming`, 캐시와 fetch 경로는 Node에서 확인했습니다. `docs/BUILD_MANIFEST.json`도 아직 기존 빌드 기준입니다.
+기존 Sites 게시 결과는 `succeeded`, deployment_id `appgdep_6af5dac514bc8191ac9027fe9afce51c`입니다. 서버 게시 성공은 실제 브라우저 조작 성공과 구분합니다. 정적 호스팅 어댑터의 WASM·APK 재조합 SHA-256, `WebAssembly.compileStreaming`, 캐시와 fetch 경로는 Node에서 확인했습니다. 현재 `docs/BUILD_MANIFEST.json`은 위 0.2.0 최종 로컬 빌드 기준으로 갱신했습니다.
 
 ## 미검증·미구현
 
@@ -68,3 +68,11 @@ Web·디버그 APK 내보내기, ZIP 무결성·v2/v3 서명·패키지·아키�
 - 모바일 Chrome·Safari의 WebGL·오디오·진동·다운로드 UI.
 - 실제 강제 종료·OS 앱 회수·브라우저 저장소 삭제 조건. 프로세스 재시작 검사는 정상 저장 이후 복원 범위입니다.
 - 온라인·결제·진짜 미러 및 다른 미구현 특수 퍼즐은 검사 대상이 아닙니다.
+
+## 0.2.0 원격 검증·게시 증거
+
+- GitHub Actions 실행 `43674662634`가 성공했고 전체 검사, Web/APK와 빌드 아티팩트를 확인했습니다. 처음 실행 `43566780587`의 SDK 설치 오류는 워크플로 수정 후 해결했습니다.
+- Sites 게시 결과는 `succeeded`, deployment_id `appgdep_6af92e958b6c819188a60f133a29c482`입니다.
+- 게시 소스 저장소 커밋은 `761b4627b7bbb9a636f2d8cb46a38558c8af8c9b`, 게임 기능 커밋은 `9716165c7910906d96362df352a6ffeeb5108385`입니다.
+- 웹·`downloads.html`·`status.html`을 0.2.0으로 교체했습니다. 실제 브라우저 조작·실기기 설치 완료를 뜻하지 않습니다.
+- 최종 네이티브 화면은 `docs/pyraminx-v2.png`, `docs/pyraminx-course-v2.png`, `docs/three-color-v2.png`를 추가 확인했으며 게임 스크립트 오류가 없었습니다.

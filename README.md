@@ -6,15 +6,15 @@
 
 | 항목 | 확인된 상태 |
 | --- | --- |
-| 소스 저장소 | [wnstn8879/cubeverse-3d](https://github.com/wnstn8879/cubeverse-3d) · 기존 검증 버전 푸시 완료 |
-| 웹 플레이 | [비공개 웹 미리보기](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site) · 현재 게시본은 0.1.0, 0.2.0 갱신 준비 중 |
-| APK 다운로드 | [테스트 APK 페이지](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/downloads.html) · 현재 게시본은 0.1.0 |
-| 자동 빌드 | [GitHub Actions](https://github.com/wnstn8879/cubeverse-3d/actions) · 첫 실행의 SDK 설치 오류 수정 후 재검증 대기 |
-| GitHub Pages | 설정 변경 API 권한이 없어 Source → GitHub Actions 활성화 확인 필요 |
-| 최신 0.2.0 | 모든 로컬 검사·Web/APK 내보내기·APK 서명 검증 통과, 원격 게시 준비 중 |
+| 소스 저장소 | [wnstn8879/cubeverse-3d](https://github.com/wnstn8879/cubeverse-3d) · 0.2.0 기능 브랜치 저장·CI 성공 |
+| 웹 플레이 | [비공개 웹 미리보기](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site) · 0.2.0 비공개 게시 성공 |
+| APK 다운로드 | [테스트 APK 페이지](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/downloads.html) · 0.2.0 디버그 APK |
+| 자동 빌드 | [0.2.0 검증 실행](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43674662634) · 전체 검사·Web/APK·Artifacts 성공 |
+| GitHub Pages | main 반영 후 자동 게시 확인 대기 |
+| 최신 0.2.0 | 로컬·GitHub CI 검증과 Sites 웹·APK 게시 성공 |
 | 실제 Android | 설치·기기 터치·햅틱·성능 미검증 |
 
-비공개 미리보기는 본인 ChatGPT 계정으로 접근합니다. [배포 빌드 현황](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/status.html)은 해당 게시본의 코드와 빌드 결과를 표시합니다. 저장소의 작업 버전과 게시본은 같지 않을 수 있습니다. 최종 결과는 [TEST_REPORT.md](TEST_REPORT.md)와 [DEPLOYMENT.md](DEPLOYMENT.md)를 확인하세요.
+비공개 미리보기는 본인 ChatGPT 계정으로 접근합니다. [배포 빌드 현황](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/status.html)은 해당 게시본의 코드와 빌드 결과를 표시합니다. 현재 Sites 게시본의 기능 기준 커밋은 `9716165c7910906d96362df352a6ffeeb5108385`입니다. 최종 결과는 [TEST_REPORT.md](TEST_REPORT.md)와 [DEPLOYMENT.md](DEPLOYMENT.md)를 확인하세요.
 
 ## 0.2.0에서 추가한 기능
 
@@ -34,7 +34,7 @@
 
 진짜 미러 큐브·메가밍크스·스큐브·기어·스퀘어-1·피셔·고스트의 개별 엔진, 임의 상태 풀이와 상태별 화살표, 리플레이 화면·통계, 영어 UI, 로그인·클라우드 동기화, 친구·온라인 대전·서버 검증·랭킹, 프리미엄 상품·Google Play 결제·구매 복원, 정식 서명과 Play 등록은 미구현입니다. 결제되지 않은 상품을 구매 완료로 표시하지 않습니다.
 
-검증된 0.2.0 APK는 현재 로컬 `build/android/CubeVerse-3D-debug.apk`에 있습니다. 웹 다운로드 페이지의 0.2.0 교체와 GitHub Release 주소는 게시 성공 후 확정합니다.
+검증된 0.2.0 APK는 [비공개 다운로드 페이지](https://cubeverse-3d-play.angksehdfur2468.chatgpt.site/downloads.html)와 [GitHub Actions Artifacts](https://github.com/wnstn8879/cubeverse-3d/actions/runs/43674662634)에서 받을 수 있습니다. GitHub Release는 태그 빌드 게시 확인 대기입니다. 로컬 파일은 `build/android/CubeVerse-3D-debug.apk`입니다.
 
 ## 개발 실행
 
